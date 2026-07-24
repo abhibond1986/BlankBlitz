@@ -162,7 +162,7 @@ class HomeScreen extends ConsumerWidget {
                           colors: [Color(0xFF10B981), Color(0xFF059669)],
                         ),
                         onTap: () {
-                          // TODO: Navigate to solo practice
+                          context.push('/practice');
                         },
                       ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.2),
                       

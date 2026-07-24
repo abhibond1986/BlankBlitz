@@ -2,11 +2,11 @@ import 'package:dartz/dartz.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../core/errors/failures.dart';
-import '../datasources/remote/cloudflare_auth_datasource.dart';
+import '../datasources/remote/mock_auth_datasource.dart';
 import '../datasources/local/local_storage_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final CloudflareAuthDataSource remoteDataSource;
+  final MockAuthDataSource remoteDataSource;
   final LocalStorageDataSource localDataSource;
 
   AuthRepositoryImpl({

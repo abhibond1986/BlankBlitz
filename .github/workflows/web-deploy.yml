@@ -30,8 +30,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Generate code (Freezed)
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
       - name: Build web
-        run: flutter build web --release --base-href /WordRush/
+        run: flutter build web --release --base-href /BlankBlitz/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

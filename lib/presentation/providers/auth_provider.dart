@@ -3,13 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../data/repositories/auth_repository_impl.dart';
-import '../../data/datasources/remote/cloudflare_auth_datasource.dart';
+import '../../data/datasources/remote/mock_auth_datasource.dart';
 import '../../data/datasources/local/local_storage_datasource.dart';
-import '../../core/network/api_client.dart';
 
 // Dependencies
-final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
-
 final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
   return await SharedPreferences.getInstance();
 });
@@ -20,15 +17,13 @@ final localStorageProvider = Provider<LocalStorageDataSource>((ref) {
   return LocalStorageDataSource(sharedPreferences: prefs);
 });
 
-final cloudflareAuthDataSourceProvider = Provider<CloudflareAuthDataSource>((ref) {
-  return CloudflareAuthDataSource(
-    apiClient: ref.watch(apiClientProvider),
-  );
+final mockAuthDataSourceProvider = Provider<MockAuthDataSource>((ref) {
+  return MockAuthDataSource();
 });
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
-    remoteDataSource: ref.watch(cloudflareAuthDataSourceProvider),
+    remoteDataSource: ref.watch(mockAuthDataSourceProvider),
     localDataSource: ref.watch(localStorageProvider),
   );
 });
