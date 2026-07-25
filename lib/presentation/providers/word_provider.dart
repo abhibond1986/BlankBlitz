@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/word_entity.dart';
 import '../../domain/repositories/word_repository.dart';
 import '../../data/repositories/word_repository_impl.dart';
+export '../../domain/entities/word_entity.dart' show HintData;
 
 // Provider for WordRepository
 final wordRepositoryProvider = Provider<WordRepository>((ref) {
@@ -44,14 +45,14 @@ class WordNotifier extends StateNotifier<WordState> {
   WordNotifier(this._wordRepository) : super(WordState());
 
   Future<void> getRandomWord({
-    String? category,
+    List<WordCategory>? categories,
     String? difficulty,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
 
     final result = await _wordRepository.getRandomWord(
-      category: category,
-      difficulty: difficulty,
+      categories: categories ?? const [],
+      difficulty: difficulty ?? 'MEDIUM',
     );
 
     result.fold(

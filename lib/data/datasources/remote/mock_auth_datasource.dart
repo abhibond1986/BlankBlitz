@@ -109,8 +109,21 @@ class MockAuthDataSource {
     // Mock logout - nothing to do
   }
 
+  Future<String> sendOtp(String phoneNumber) async {
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Mock validation
+    if (phoneNumber.isEmpty) {
+      throw const ServerFailure('Phone number is required');
+    }
+
+    // Return mock session ID
+    return 'session_${DateTime.now().millisecondsSinceEpoch}';
+  }
+
   Future<UserModel> verifyOtp({
-    required String emailOrPhone,
+    required String phoneNumber,
     required String otp,
   }) async {
     // Simulate network delay
@@ -124,11 +137,9 @@ class MockAuthDataSource {
     // Return mock user
     return UserModel(
       id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-      username: emailOrPhone.contains('@')
-          ? emailOrPhone.split('@')[0]
-          : 'User_${emailOrPhone.substring(emailOrPhone.length - 4)}',
-      email: emailOrPhone.contains('@') ? emailOrPhone : null,
-      phone: emailOrPhone.contains('@') ? null : emailOrPhone,
+      username: 'User_${phoneNumber.substring(phoneNumber.length - 4)}',
+      email: null,
+      phone: phoneNumber,
       rank: 'BRONZE',
       level: 1,
       xp: 0,

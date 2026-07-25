@@ -8,6 +8,7 @@ import '../screens/game/practice_screen.dart';
 import '../screens/game/lobby_screen.dart';
 import '../screens/game/gameplay_screen.dart';
 import '../screens/game/results_screen.dart';
+import '../../domain/entities/game_room_entity.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/splash',
@@ -41,10 +42,30 @@ final appRouter = GoRouter(
       path: '/lobby',
       name: 'lobby',
       builder: (context, state) {
-        final extra = state.extra as Map<String, dynamic>?;
+        final extra = state.extra;
+        if (extra is GameRoomEntity) {
+          return LobbyScreen(gameRoom: extra);
+        }
+        // Fallback with mock data
         return LobbyScreen(
-          roomCode: extra?['roomCode'] ?? 'ROOM123',
-          gameMode: extra?['gameMode'] ?? 'Quick Match',
+          gameRoom: GameRoomEntity(
+            id: 'room_123',
+            roomCode: 'ROOM123',
+            hostId: 'user_1',
+            gameMode: GameMode.quickMatch,
+            status: GameStatus.waiting,
+            visibility: RoomVisibility.public,
+            players: const [],
+            maxPlayers: 4,
+            currentRound: 0,
+            totalRounds: 10,
+            roundTimeLimit: 30,
+            difficulty: 'MEDIUM',
+            categories: const [],
+            createdAt: DateTime.now(),
+            startedAt: null,
+            finishedAt: null,
+          ),
         );
       },
     ),
@@ -53,11 +74,22 @@ final appRouter = GoRouter(
       name: 'results',
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
+        final results = extra?['results'] as List<GameResult>? ?? [
+          const GameResult(
+            userId: 'user_1',
+            username: 'Player 1',
+            finalScore: 1000,
+            correctAnswers: 8,
+            wrongAnswers: 2,
+            rank: 1,
+            coinsEarned: 100,
+            xpEarned: 250,
+          ),
+        ];
         return ResultsScreen(
-          score: extra?['score'] ?? 0,
-          correct: extra?['correct'] ?? 0,
-          wrong: extra?['wrong'] ?? 0,
-          totalRounds: extra?['totalRounds'] ?? 10,
+          results: results,
+          currentUserId: extra?['currentUserId'] ?? 'user_1',
+          gameMode: extra?['gameMode'] ?? GameMode.quickMatch,
         );
       },
     ),
