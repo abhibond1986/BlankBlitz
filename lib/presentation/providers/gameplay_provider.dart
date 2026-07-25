@@ -117,9 +117,10 @@ class GameplayNotifier extends StateNotifier<GameplayState> {
     if (isCorrect) {
       // Calculate score (base score + time bonus)
       final timeBonus = (state.timeRemaining * 10).toInt();
+      final timeTakenDuration = Duration(seconds: _roundTimeLimit - state.timeRemaining);
       final wordScore = currentWord.calculateScore(
-        timeTaken: _roundTimeLimit - state.timeRemaining,
-        hintsUsed: 0, // Track hints if implemented
+        timeTakenDuration,
+        _roundTimeLimit,
       );
       final totalScore = wordScore + timeBonus;
 
@@ -128,12 +129,11 @@ class GameplayNotifier extends StateNotifier<GameplayState> {
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: 'local_user', // Replace with actual user ID
         wordId: currentWord.id,
-        roomId: 'practice', // Replace with actual room ID
+        gameRoomId: 'practice', // Replace with actual room ID
         roundNumber: state.currentRound,
-        userAnswer: answer,
-        isCorrect: true,
-        timeTaken: _roundTimeLimit - state.timeRemaining,
-        score: totalScore,
+        answer: answer,
+        timeTaken: timeTakenDuration,
+        scoreEarned: totalScore,
         submittedAt: DateTime.now(),
         status: AnswerStatus.correct,
       );
@@ -152,18 +152,18 @@ class GameplayNotifier extends StateNotifier<GameplayState> {
       });
     } else {
       // Wrong answer
+      final timeTakenDuration = Duration(seconds: _roundTimeLimit - state.timeRemaining);
       final answerEntity = AnswerEntity(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: 'local_user',
         wordId: currentWord.id,
-        roomId: 'practice',
+        gameRoomId: 'practice',
         roundNumber: state.currentRound,
-        userAnswer: answer,
-        isCorrect: false,
-        timeTaken: _roundTimeLimit - state.timeRemaining,
-        score: 0,
+        answer: answer,
+        timeTaken: timeTakenDuration,
+        scoreEarned: 0,
         submittedAt: DateTime.now(),
-        status: AnswerStatus.wrong,
+        status: AnswerStatus.incorrect,
       );
 
       state = state.copyWith(

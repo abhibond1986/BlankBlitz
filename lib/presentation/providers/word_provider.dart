@@ -96,19 +96,11 @@ class WordNotifier extends StateNotifier<WordState> {
   bool validateAnswer(String answer) {
     if (state.currentWord == null) return false;
 
-    final result = _wordRepository.validateAnswer(
-      wordId: state.currentWord!.id,
-      userAnswer: answer,
-    );
-
-    // Return true/false synchronously for immediate UI feedback
-    return result.fold(
-      (failure) => false,
-      (isValid) => isValid,
-    );
+    // Simple client-side validation for immediate feedback
+    return state.currentWord!.isCorrectAnswer(answer);
   }
 
-  Future<Map<String, dynamic>?> getHint(String hintType) async {
+  Future<HintData?> getHint(String hintType) async {
     if (state.currentWord == null) return null;
 
     final result = await _wordRepository.getHint(

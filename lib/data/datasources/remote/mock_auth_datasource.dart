@@ -108,4 +108,40 @@ class MockAuthDataSource {
     await Future.delayed(const Duration(milliseconds: 200));
     // Mock logout - nothing to do
   }
+
+  Future<UserModel> verifyOtp({
+    required String emailOrPhone,
+    required String otp,
+  }) async {
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    // Mock validation - accept any 4-6 digit OTP
+    if (otp.length < 4 || otp.length > 6) {
+      throw const ServerFailure('Invalid OTP');
+    }
+
+    // Return mock user
+    return UserModel(
+      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+      username: emailOrPhone.contains('@')
+          ? emailOrPhone.split('@')[0]
+          : 'User_${emailOrPhone.substring(emailOrPhone.length - 4)}',
+      email: emailOrPhone.contains('@') ? emailOrPhone : null,
+      phone: emailOrPhone.contains('@') ? null : emailOrPhone,
+      rank: 'BRONZE',
+      level: 1,
+      xp: 0,
+      coins: 100,
+      gems: 0,
+      avatarUrl: null,
+      wins: 0,
+      losses: 0,
+      totalMatches: 0,
+      typingSpeed: 0.0,
+      accuracy: 0.0,
+      createdAt: DateTime.now(),
+      lastLogin: DateTime.now(),
+    );
+  }
 }
