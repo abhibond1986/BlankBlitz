@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../domain/entities/game_room_entity.dart';
 import '../../providers/game_room_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/app_logo.dart';
 
 class MatchmakingScreen extends ConsumerStatefulWidget {
   const MatchmakingScreen({super.key});
@@ -121,27 +122,27 @@ class _MatchmakingScreenState extends ConsumerState<MatchmakingScreen> {
         child: SafeArea(
           child: Column(
             children: [
+              // Logo at top
+              const Padding(
+                padding: EdgeInsets.only(top: 16, bottom: 8),
+                child: AppLogo(size: 40),
+              ),
+
               // Header
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: _cancelMatchmaking,
-                    ),
-                    const Expanded(
-                      child: Text(
-                        'Quick Match',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
+                    const Text(
+                      'Quick Match',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(width: 48),
                   ],
                 ),
               ),

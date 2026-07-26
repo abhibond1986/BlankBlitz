@@ -8,6 +8,9 @@ import '../../providers/gameplay_provider.dart';
 import '../../providers/word_provider.dart';
 import '../../providers/game_room_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/app_logo.dart';
+import '../../widgets/celebration_overlay.dart';
+import '../../widgets/player_stats_overlay.dart';
 
 class EnhancedPracticeScreen extends ConsumerStatefulWidget {
   const EnhancedPracticeScreen({super.key});
@@ -21,6 +24,9 @@ class _EnhancedPracticeScreenState extends ConsumerState<EnhancedPracticeScreen>
   final FocusNode _answerFocus = FocusNode();
   bool _gameStarted = false;
   late AnimationController _pulseController;
+  bool _showCelebration = false;
+  bool _lastAnswerCorrect = false;
+  int _lastPoints = 0;
 
   @override
   void initState() {
@@ -76,8 +82,32 @@ class _EnhancedPracticeScreenState extends ConsumerState<EnhancedPracticeScreen>
     final answer = _answerController.text.trim().toUpperCase();
     if (answer.isEmpty) return;
 
+    final wordState = ref.read(wordProvider);
+    final currentWord = wordState.currentWord;
+    if (currentWord == null) return;
+
+    final isCorrect = answer == currentWord.word.toUpperCase();
+    final points = isCorrect ? 150 : 0; // Base points for correct answer
+
+    // Show celebration
+    setState(() {
+      _showCelebration = true;
+      _lastAnswerCorrect = isCorrect;
+      _lastPoints = points;
+    });
+
+    // Submit answer to provider
     ref.read(gameplayProvider.notifier).submitAnswer(answer);
     _answerController.clear();
+
+    // Hide celebration after delay
+    Future.delayed(Duration(milliseconds: isCorrect ? 1500 : 800), () {
+      if (mounted) {
+        setState(() {
+          _showCelebration = false;
+        });
+      }
+    });
   }
 
   void _endGame() {
@@ -175,78 +205,75 @@ class _EnhancedPracticeScreenState extends ConsumerState<EnhancedPracticeScreen>
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              // Header with stats
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Back/Close button
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
-                      onPressed: () {
-                        _showQuitDialog();
-                      },
-                    ),
+              Column(
+                children: [
+                  // Header with logo and stats
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Logo
+                        const AppLogo(size: 40),
 
-                    // Round indicator
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(25),
-                        border: Border.all(color: Colors.white.withOpacity(0.3)),
-                      ),
-                      child: Text(
-                        'Round ${gameplayState.currentRound}/10',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-
-                    // Score
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color(0xFFFBBF24),
-                            const Color(0xFFF59E0B),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFFBBF24).withOpacity(0.5),
-                            blurRadius: 15,
-                            offset: const Offset(0, 4),
+                        // Round indicator
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(25),
+                            border: Border.all(color: Colors.white.withOpacity(0.3)),
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.star, color: Colors.white, size: 20),
-                          const SizedBox(width: 6),
-                          Text(
-                            '${gameplayState.playerScore}',
+                          child: Text(
+                            'Round ${gameplayState.currentRound}/10',
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+
+                        // Score
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                const Color(0xFFFBBF24),
+                                const Color(0xFFF59E0B),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFFBBF24).withOpacity(0.5),
+                                blurRadius: 15,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.star, color: Colors.white, size: 20),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${gameplayState.playerScore}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
 
               const SizedBox(height: 20),
 
@@ -485,7 +512,24 @@ class _EnhancedPracticeScreenState extends ConsumerState<EnhancedPracticeScreen>
                 ),
               ),
 
-              const SizedBox(height: 24),
+                  const SizedBox(height: 24),
+                ],
+              ),
+
+              // Celebration overlay
+              if (_showCelebration)
+                Positioned.fill(
+                  child: CelebrationOverlay(
+                    show: _showCelebration,
+                    isCorrect: _lastAnswerCorrect,
+                    points: _lastPoints,
+                    onComplete: () {
+                      setState(() {
+                        _showCelebration = false;
+                      });
+                    },
+                  ),
+                ),
             ],
           ),
         ),

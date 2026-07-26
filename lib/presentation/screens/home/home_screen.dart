@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/config/app_config.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/app_logo.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -30,6 +31,12 @@ class HomeScreen extends ConsumerWidget {
         child: SafeArea(
           child: Column(
             children: [
+              // Logo at top
+              const Padding(
+                padding: EdgeInsets.only(top: 16, bottom: 8),
+                child: AppLogo(size: 50, showText: true),
+              ),
+
               // Header
               Padding(
                 padding: const EdgeInsets.all(20),

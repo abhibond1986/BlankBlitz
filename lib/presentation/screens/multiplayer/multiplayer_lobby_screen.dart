@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '../../../domain/entities/game_room_entity.dart';
 import '../../providers/game_room_provider.dart';
+import '../../widgets/app_logo.dart';
 
 class MultiplayerLobbyScreen extends ConsumerStatefulWidget {
   final GameRoomEntity gameRoom;
@@ -67,16 +68,18 @@ class _MultiplayerLobbyScreenState extends ConsumerState<MultiplayerLobbyScreen>
         child: SafeArea(
           child: Column(
             children: [
+              // Logo at top
+              const Padding(
+                padding: EdgeInsets.only(top: 16, bottom: 8),
+                child: AppLogo(size: 40),
+              ),
+
               // Header
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (!_gameStarting)
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () => context.pop(),
-                      ),
                     Expanded(
                       child: Column(
                         children: [
