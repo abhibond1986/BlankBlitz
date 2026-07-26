@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dartz/dartz.dart';
 import '../../domain/entities/game_room_entity.dart';
 import '../../domain/repositories/game_repository.dart';
 import '../../data/repositories/game_repository_impl.dart';
+import '../../core/error/failures.dart';
 
 // Provider for GameRepository
 final gameRepositoryProvider = Provider<GameRepository>((ref) {
@@ -162,30 +164,39 @@ class GameRoomNotifier extends StateNotifier<GameRoomState> {
     );
   }
 
-  Future<void> quickMatch({
-    required String userId,
+  Future<Either<Failure, GameRoomEntity>> quickMatch({
+    String? userId,
     GameMode gameMode = GameMode.quickMatch,
     String difficulty = 'MEDIUM',
   }) async {
     state = state.copyWith(isLoading: true, error: null);
 
+    // Use provided userId or get from state
+    final finalUserId = userId ?? state.room?.hostId ?? 'temp_user';
+
     final result = await _gameRepository.quickMatch(
-      userId: userId,
+      userId: finalUserId,
       gameMode: gameMode,
       difficulty: difficulty,
     );
 
     result.fold(
-      (failure) => state = state.copyWith(
-        isLoading: false,
-        error: failure.message,
-      ),
-      (room) => state = state.copyWith(
-        room: room,
-        isLoading: false,
-        error: null,
-      ),
+      (failure) {
+        state = state.copyWith(
+          isLoading: false,
+          error: failure.message,
+        );
+      },
+      (room) {
+        state = state.copyWith(
+          room: room,
+          isLoading: false,
+          error: null,
+        );
+      },
     );
+
+    return result;
   }
 
   Future<void> _refreshRoom(String roomId) async {

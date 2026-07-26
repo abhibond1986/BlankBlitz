@@ -176,7 +176,7 @@ class HomeScreen extends ConsumerWidget {
                           colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
                         ),
                         onTap: () {
-                          // TODO: Navigate to quick match
+                          context.push('/quick-match');
                         },
                       ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.2),
                       
@@ -190,7 +190,7 @@ class HomeScreen extends ConsumerWidget {
                           colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
                         ),
                         onTap: () {
-                          // TODO: Navigate to private room
+                          context.push('/private-room');
                         },
                       ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.2),
                       
@@ -205,7 +205,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         badge: 'HOT',
                         onTap: () {
-                          // TODO: Navigate to battle royale
+                          context.push('/battle-royale');
                         },
                       ).animate().fadeIn(delay: 700.ms).slideY(begin: 0.2),
                       
@@ -219,7 +219,7 @@ class HomeScreen extends ConsumerWidget {
                           colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
                         ),
                         onTap: () {
-                          // TODO: Navigate to tournament
+                          context.push('/tournament');
                         },
                       ).animate().fadeIn(delay: 800.ms).slideY(begin: 0.2),
                     ],

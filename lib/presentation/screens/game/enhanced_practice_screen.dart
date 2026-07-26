@@ -378,7 +378,7 @@ class _EnhancedPracticeScreenState extends ConsumerState<EnhancedPracticeScreen>
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 48,
-                    fontWeight: FontWeight.black,
+                    fontWeight: FontWeight.w900,
                     color: Color(0xFF1E1B4B),
                     letterSpacing: 12,
                     height: 1.2,
@@ -454,7 +454,7 @@ class _EnhancedPracticeScreenState extends ConsumerState<EnhancedPracticeScreen>
                     'SUBMIT',
                     style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.black,
+                      fontWeight: FontWeight.w900,
                       letterSpacing: 3,
                     ),
                   ),
