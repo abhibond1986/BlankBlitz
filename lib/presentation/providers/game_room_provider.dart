@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../domain/entities/game_room_entity.dart';
 import '../../domain/repositories/game_repository.dart';
 import '../../data/repositories/game_repository_impl.dart';
-import '../../core/error/failures.dart';
+import '../../core/errors/failures.dart';
 
 // Provider for GameRepository
 final gameRepositoryProvider = Provider<GameRepository>((ref) {
