@@ -3,11 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/config/app_config.dart';
+import 'core/config/supabase_config.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/routes/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Supabase
+  await SupabaseConfig.initialize();
 
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([

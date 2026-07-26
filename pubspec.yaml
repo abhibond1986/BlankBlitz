@@ -18,7 +18,7 @@ dependencies:
   # Navigation
   go_router: ^14.2.0
 
-  # Firebase
+  # Firebase (optional - can be removed if fully migrating to Supabase)
   firebase_core: ^3.3.0
   firebase_auth: ^5.1.4
   cloud_firestore: ^5.2.1
@@ -27,6 +27,9 @@ dependencies:
   firebase_analytics: ^11.2.1
   firebase_crashlytics: ^4.0.4
   firebase_messaging: ^15.0.4
+
+  # Supabase
+  supabase_flutter: ^2.5.6
 
   # Local Storage
   shared_preferences: ^2.2.3

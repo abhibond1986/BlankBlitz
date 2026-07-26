@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/config/app_config.dart';
+import '../../providers/auth_provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -18,12 +21,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initializeApp() async {
-    // Simulate initialization
+    // Simulate initialization and loading
     await Future.delayed(const Duration(seconds: 2));
-    
-    // TODO: Check auth state and navigate accordingly
-    if (mounted) {
-      // Will navigate to login or home based on auth state
+
+    if (!mounted) return;
+
+    // Check auth state
+    final authState = ref.read(authProvider);
+
+    // Navigate based on authentication status
+    if (authState.isAuthenticated && authState.user != null) {
+      context.go('/home');
+    } else {
+      context.go('/login');
     }
   }
 
