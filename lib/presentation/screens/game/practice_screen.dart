@@ -43,7 +43,7 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
 
     // Create a practice room
     await ref.read(gameRoomProvider.notifier).createRoom(
-      gameMode: GameMode.practice,
+      gameMode: GameMode.soloPractice,
       hostId: user.id,
       visibility: RoomVisibility.private,
       maxPlayers: 1,
@@ -250,7 +250,9 @@ class _PracticeScreenState extends ConsumerState<PracticeScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  currentWord.category.toUpperCase(),
+                  currentWord.categories.isNotEmpty
+                      ? currentWord.categories.first.name.toUpperCase()
+                      : 'GENERAL',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,

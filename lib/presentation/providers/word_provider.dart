@@ -135,7 +135,7 @@ final preloadWordsProvider = FutureProvider.family<void, Map<String, dynamic>>((
 
   await repository.preloadWords(
     count: params['count'] as int? ?? 50,
-    category: params['category'] as String?,
-    difficulty: params['difficulty'] as String?,
+    categories: params['categories'] as List<String>? ?? const [],
+    difficulty: params['difficulty'] as String? ?? 'MEDIUM',
   );
 });
