@@ -4,7 +4,7 @@ import '../screens/splash/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/home/home_screen.dart';
-import '../screens/game/practice_screen.dart';
+import '../screens/game/enhanced_practice_screen.dart';
 import '../screens/game/lobby_screen.dart';
 import '../screens/game/gameplay_screen.dart';
 import '../screens/game/results_screen.dart';
@@ -36,7 +36,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/practice',
       name: 'practice',
-      builder: (context, state) => const PracticeScreen(),
+      builder: (context, state) => const EnhancedPracticeScreen(),
     ),
     GoRoute(
       path: '/lobby',
